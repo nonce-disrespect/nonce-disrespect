@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -eu -o pipefail
+
+function fail() {
+  printf "!!! build failure. \n\n"
+  [[ $(pwd) =~ "tool" ]] && {
+    cat ../gcmproxy/README || cat README
+  }
+  exit 1
+}
+
+go clean || fail
+pushd ../tool
+make clean ; make || fail
+popd
+go build gcmproxy.go || fail
+
+tail -7 README

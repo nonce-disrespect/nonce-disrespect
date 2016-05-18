@@ -1,0 +1,14 @@
+To build:
+
+$ ./build
+
+You will need gmp and NTL installed. You may need to modify CPPFLAGS
+and LDFLAGS to include their installation paths.
+
+To run:
+
+$ ./gcmproxy -l noncerepeater.com:8443 -r noncerepeater.com:4443 -w localhost:8080
+
+You will need a vulnerable HTTPS server at noncerepeater.com.
+
+Point your browser at localhost:8080.

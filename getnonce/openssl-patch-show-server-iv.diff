@@ -1,0 +1,19 @@
+--- a/crypto/evp/e_aes.c	2015-12-03 15:04:23.000000000 +0100
++++ openssl-1.0.2e/crypto/evp/e_aes.c	2015-12-26 14:44:35.712023671 +0100
+@@ -1145,6 +1145,7 @@
+ static int aes_gcm_ctrl(EVP_CIPHER_CTX *c, int type, int arg, void *ptr)
+ {
+     EVP_AES_GCM_CTX *gctx = c->cipher_data;
++    int i;
+     switch (type) {
+     case EVP_CTRL_INIT:
+         gctx->key_set = 0;
+@@ -1222,6 +1223,8 @@
+         if (gctx->iv_gen == 0 || gctx->key_set == 0 || c->encrypt)
+             return 0;
+         memcpy(gctx->iv + gctx->ivlen - arg, ptr, arg);
++        for(i=0;i<gctx->ivlen;i++) printf("%02x:", gctx->iv[i]);
++	printf("\n");
+         CRYPTO_gcm128_setiv(&gctx->gcm, gctx->iv, gctx->ivlen);
+         gctx->iv_set = 1;
+         return 1;
