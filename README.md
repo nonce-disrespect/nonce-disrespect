@@ -35,6 +35,11 @@ Code
 
 All our code is published as CC0 / public domain.
 
+Data
+====
+
+* [Nonce values from Internet-wide scan on scans.io](https://scans.io/study/nonce-disrespect)
+
 Advisories
 ==========
 
@@ -45,5 +50,8 @@ Security advisories from affected vendors:
 Misc
 ====
 
+* [TLS Symmetric Crypto (Blogpost by Adam Langley with the initial idea for this research)](https://www.imperialviolet.org/2014/02/27/tlssymmetriccrypto.html)
+* [Authentication Failures in NIST version of GCM (Antoine Joux, source for Forbidden Attack against GCM)](http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/comments/800-38_Series-Drafts/GCM/Joux_comments.pdf)
 * [Youtube video showing XSS injection on visa.dk](https://www.youtube.com/watch?v=qByIrRigmyo)
 * [Black Hat USA 2016 talk announcement](https://www.blackhat.com/us-16/briefings/schedule/#nonce-disrespecting-adversaries-practical-forgery-attacks-on-gcm-in-tls-3483)
+* [Slides from talk at BerlinSec Meetup](https://www.int21.de/slides/berlinsec-gcm/)
