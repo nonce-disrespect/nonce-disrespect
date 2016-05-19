@@ -6,7 +6,7 @@ We provide supplemental material to our research on AES-GCM nonce reuse vulnerab
 Research paper
 ==============
 
-* Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS (will be published soon on the Cryptology ePrint Archive)
+* [Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS](https://eprint.iacr.org/2016/475)
 
 Background
 ==========
