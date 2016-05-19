@@ -44,7 +44,7 @@ Domain](https://creativecommons.org/publicdomain/zero/1.0/).
 Data
 ====
 
-* [Nonce values from Internet-wide scan on scans.io](https://scans.io/study/nonce-disrespect)
+* [Collected data from our Internet-wide scan on scans.io](https://scans.io/study/nonce-disrespect)
 
 Advisories
 ==========
