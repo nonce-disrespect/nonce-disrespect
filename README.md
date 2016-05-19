@@ -10,7 +10,9 @@ Research paper
 
 Background
 ==========
+**Abstract**:
 
+```
 We investigate nonce reuse issues with the GCM block cipher mode as
 used in TLS and focus in particular on AES-GCM, the most widely
 deployed variant. With an Internet-wide scan we identified 184 HTTPS
@@ -23,6 +25,7 @@ valid content into encrypted sessions. Furthermore, we discovered
 over 70,000 HTTPS servers using random nonces, which puts them at risk
 of nonce reuse, in the unlikely case that large amounts of data are
 sent via the same session.
+```
 
 This repository provides supplemental code and information.
 
@@ -33,7 +36,10 @@ Code
 * [gcmproxy](gcmproxy/) - attack implemented in Go.
 * [tool](tool/) - helper tools used by attack code.
 
-All our code is published as CC0 / public domain.
+License
+=======
+All our code is published as [CC0 1.0 / Public
+Domain](https://creativecommons.org/publicdomain/zero/1.0/).
 
 Data
 ====
@@ -55,3 +61,8 @@ Misc
 * [Youtube video showing XSS injection on visa.dk](https://www.youtube.com/watch?v=qByIrRigmyo)
 * [Black Hat USA 2016 talk announcement](https://www.blackhat.com/us-16/briefings/schedule/#nonce-disrespecting-adversaries-practical-forgery-attacks-on-gcm-in-tls-3483)
 * [Slides from talk at BerlinSec Meetup](https://www.int21.de/slides/berlinsec-gcm/)
+* [Errata on RFC5288 (AES GCM Cipher-suites in
+  TLS)](https://www.rfc-editor.org/errata_search.php?rfc=5288&eid=4694)
+  * [TLS-WG discussion on said
+  errata](https://mailarchive.ietf.org/arch/search/?email_list=tls&gbt=1&index=pV7IzE5XmgUytI5OemV-vqjzPqE)
+
