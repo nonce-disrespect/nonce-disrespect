@@ -6,7 +6,13 @@ We provide supplemental material to our research on AES-GCM nonce reuse vulnerab
 Research paper
 ==============
 
-* [Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS](https://eprint.iacr.org/2016/475)
+* [Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS (final version / Usenix WOOT)](https://www.usenix.org/system/files/conference/woot16/woot16-paper-bock.pdf)
+* [Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS (preprint version / eprint.iacr.org)](https://eprint.iacr.org/2016/475)
+
+Online check
+============
+
+* [Online check for GCM nonces](https://gcm.tlsfun.de/)
 
 Background
 ==========
@@ -67,6 +73,7 @@ Misc
 * [Authentication Failures in NIST version of GCM (Antoine Joux, source for Forbidden Attack against GCM)](http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/comments/800-38_Series-Drafts/GCM/Joux_comments.pdf)
 * [Youtube video showing XSS injection on visa.dk](https://www.youtube.com/watch?v=qByIrRigmyo)
 * [Black Hat USA 2016 talk announcement](https://www.blackhat.com/us-16/briefings/schedule/#nonce-disrespecting-adversaries-practical-forgery-attacks-on-gcm-in-tls-3483)
+* [Usenix WOOT '16 talk announcement](https://www.usenix.org/conference/woot16/workshop-program/presentation/bock)
 * [Slides from talk at BerlinSec Meetup](https://www.int21.de/slides/berlinsec-gcm/)
 * [Errata on RFC5288 (AES GCM Cipher-suites in
   TLS)](https://www.rfc-editor.org/errata_search.php?rfc=5288&eid=4694)
