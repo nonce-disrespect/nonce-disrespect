@@ -60,11 +60,13 @@ Security advisories from affected vendors:
 * [Radware / SA18456: Security Advisory Explicit Initialization Vector for AES-GCM Cipher](https://kb.radware.com/Questions/SecurityAdvisory/Public/Security-Advisory-Explicit-Initialization-Vector-f)
 * [A10: CVE-2016-0270 GCM nonce vulnerability (fixed in 2.7.2-p8)](https://files.a10networks.com/vadc/cve-2016-0270-gcm-nonce-vulnerability/)
 
-Media
-=====
+Media / Blogs
+=============
 
 * [Golem: TLS/GCM - Gefahr durch doppelte Nonces](http://www.golem.de/news/tls-gcm-gefahr-durch-doppelte-nonces-1605-121005.html)
 * [Ars Technica: “Forbidden attack” makes dozens of HTTPS Visa sites vulnerable to tampering](http://arstechnica.com/security/2016/05/faulty-https-settings-leave-dozens-of-visa-sites-vulnerable-to-forgery-attacks/)
+* [Veracode: Crypto Fun at Black Hat 2016](https://www.veracode.com/blog/2016/08/crypto-fun-black-hat-2016)
+* [David Wong: Breaking https' AES-GCM (or a part of it)](https://www.cryptologie.net/article/361/nonce-disrespecting-adversaries-practical-forgery-attacks-on-gcm-in-tls/)
 
 Misc
 ====
