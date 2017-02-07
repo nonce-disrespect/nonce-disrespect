@@ -59,6 +59,7 @@ Security advisories from affected vendors:
 * [Security Bulletin: Vulnerability in IBM Domino Web Server TLS AES GCM Nonce Generation (CVE-2016-0270)](https://www-01.ibm.com/support/docview.wss?uid=swg21979604)
 * [Radware / SA18456: Security Advisory Explicit Initialization Vector for AES-GCM Cipher](https://kb.radware.com/Questions/SecurityAdvisory/Public/Security-Advisory-Explicit-Initialization-Vector-f)
 * [A10: CVE-2016-0270 GCM nonce vulnerability (fixed in 2.7.2-p8)](https://files.a10networks.com/vadc/cve-2016-0270-gcm-nonce-vulnerability/)
+* [CTX220329: Vulnerability in Citrix NetScaler Application Delivery Controller and NetScaler Gateway GCM nonce generation](https://support.citrix.com/article/CTX220329)
 
 Media / Blogs
 =============
