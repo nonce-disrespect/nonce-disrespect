@@ -43,6 +43,7 @@ Code
 * [tool](tool/) - helper tools used by attack code.
 * [paper](paper/) - LaTeX source-code for IACR ePrint and WOOT16
   camera-ready versions.
+* [slides](slides/) - presentation slides for Black Hat USA 2016 and WOOT16.
 
 License
 =======
