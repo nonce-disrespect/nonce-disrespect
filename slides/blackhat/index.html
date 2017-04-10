@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<!---
+
+  Explanation:
+
+  * This needs the directories css, js, lib and plugin from reveal.js:
+    http://lab.hakim.se/reveal-js/
+  * Colors indicate speaker, dark green: Hanno, dark blue: Aaron, dark red: Sean
+
+--->
+	<head>
+		<meta charset="utf-8">
+
+		<title>AES-GCM - nonce reuse issues in TLS</title>
+
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+
+        <!--
+        <script type="text/javascript" src="MathJax/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+        <script>
+         MathJax.Hub.Config({
+             tex2jax: {
+                 inlineMath: [['$','$'], ['\\(','\\)']],
+                 processEscapes: true
+             },
+             TeX: {
+                 extensions: ['color.js']
+             }
+         });
+        </script>
+        -->
+
+
+<style type="text/css">
+p { text-align: left; }
+
+.caption {
+     bottom:0px;
+     right:0px;
+     position:absolute;
+}
+</style>
+
+
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h2>Nonce-Disrespecting Adversaries</h2>
+					<h3>Practical forgery attacks on GCM in TLS</h3>
+					<p style="text-align:center">
+					Hanno Böck, Aaron Zauner, Sean Devlin, Juraj Somorovsky,
+Philipp Jovanovic</p>
+				</section>
+
+
+<section>
+<h2>TLS encryption</h2>
+<p>Step 1: Asymmetric key exchange (RSA, DHE, ECDHE) to generate shared keys</p>
+<p>Step 2: Symmetric encryption and authentication</p>
+<p>Today we're interested in Step 2.</p>
+</section>
+
+<section>
+<h2>TLS symmetric modes</h2>
+<p>CBC/HMAC</p>
+<p>RC4 (stream cipher)</p>
+<p>GCM</p>
+<p>(new: ChaCha20/Poly1305)</p>
+</section>
+
+<section>
+<h2>CBC/HMAC</h2>
+<p>Vaudenay Padding Oracle (2002), Vaudenay/Moeller (2003/2004), BEAST (2011), Lucky Thirteen (2013),
+POODLE (2014), POODLE-TLS (2014), more POODLEs (2015), Lucky Microseconds (2015),
+Padding Oracle in OpenSSL / CVE-2016-2107</p>
+</section>
+
+<section>
+<h2>CBC/HMAC problems</h2>
+<p>CBC/HMAC in TLS used an implicit IV in TLS 1.0.</p>
+<p>The padding content in SSLv3 was undefined.</p>
+<p>All TLS versions use MAC-then-Pad-then-Encrypt.</p>
+<p>Encrypt-then-MAC extension, but it's rarely used.</p>
+</section>
+
+<section>
+<h2>TLS 1.2 predicts Lucky Thirteen</h2>
+<p><em>This leaves a small timing channel, since MAC
+   performance depends to some extent on the size of the data fragment,
+   but it is not believed to be large enough to be exploitable, due to
+   the large block size of existing MACs and the small size of the
+   timing signal.</em> (TLS 1.2, RFC 5246)</p>
+</section>
+
+<section>
+<h2>Lucky thirteen is a big mess</h2>
+<p>Amazon tried to implement countermeasures that didn't work.</p>
+<p>Some implementations (Go, TLS Lite) are known vulnerable and don't want to fix it.</p>
+<p>OpenSSL introduced another (worse) padding oracle while fixing Lucky Thirteen.</p>
+</section>
+
+<section>
+<h2>RC4</h2>
+<p>After Lucky Thirteen many sites switched to RC4.</p>
+<p>Fluhrer/Shamir/Mantin (2001), attack on TLS by AlFardan/Bernstein/Patterson (2013), Bar-Mitzva-Attack/Mantin
+(2015), Garman/va der Merwe/Paterson (2015), Vanhoef/Piessens (2015).</p>
+<p>RFC 7465: "Prohibiting RC4 Cipher Suites"</p>
+</section>
+
+<section>
+<h2>GCM</h2>
+<p>GCM - Galois/Counter Mode.</p>
+<p>Usually used with AES.</p>
+<p>Only available in TLS 1.2.</p>
+<p>"This seems like a good moment to reiterate that everything less than TLS 1.2 with an AEAD cipher suite is
+cryptographically broken." (Adam Langley)</p>
+</section>
+
+<section>
+<h2>What is GCM?</h2>
+<p>GCM is an AEAD (Authenticated Encryption with Additional Data)</p>
+<p>Rationale: If you give people an encryption mode and an authentication mechanism they will combine
+it in an insecure way. So give them a standard that combines both.</p>
+<p>GCM is a combination of Counter Mode and a GHASH authentication tag.</p>
+</section>
+
+<section>
+<h2>GCM - opinions</h2>
+<p><em>"Do not use GCM. Consider using one of the other authenticated encryption modes, such as
+CWC, OCB, or CCM."</em> (Niels Ferguson)</p>
+<p><em>"We conclude that common implementations of GCM are potentially vulnerable to authentication
+key recovery via cache timing attacks."</em> (Emilia Käsper, Peter Schwabe, 2009)</p>
+<p><em>"AES-GCM so easily leads to timing side-channels that I'd like to put it into Room 101."</em> (Adam Langley, 2013)</p>
+<p><em>"The fragility of AES-GCM authentication algorithm"</em> (Shay Gueron, Vlad Krasnov, 2013)</p>
+<p><em>"GCM is extremely fragile"</em> (Kenny Paterson, 2015)</p>
+</section>
+
+<section>
+<h2>GCM</h2>
+<p>Everybody uses GCM, but nobody likes it.</p>
+</section>
+
+<section>
+<p><em>"There's also an annoying niggle with AES-GCM in TLS because the spec says that records have an eight byte, explicit nonce. Being an AEAD, the nonce is required to be unique for a given key. Since an eight-byte value is too small to pick at random with a sufficiently low collision probability, the only safe implementation is a counter. [...] Thankfully, all the major implementations use a counter and I did a scan of the Alexa, top 200K sites to check that none are using random values - and none are."</em> (Adam Langley)</p>
+</section>
+
+<section>
+<h2>Nonce</h2>
+<p>Number used once.</p>
+<p>If you use the same Nonce twice (with the same key) it's no longer a nonce.</p>
+<p>TLS: 8 Byte / 64 Bit nonce</p>
+</section>
+
+<section>
+<h2>THE SPEC (RFC 5288 / TLS 1.2)</h2>
+<p><em>"Each value of the nonce_explicit MUST be distinct for each distinct invocation of the GCM encrypt function for any fixed key. Failure to meet this uniqueness requirement can significantly degrade security. The nonce_explicit MAY be the 64-bit sequence number."</em></p>
+</section>
+
+<section>
+<h2>Internet-wide scan results</h2>
+<p>184 hosts with repeating nonces</p>
+<p>72445 hosts with random looking nonces</p>
+</section>
+
+<section>
+<h2>Finding affected vendors</h2>
+<p>Certificate info, website content, HTTP "Server:" header.</p>
+<p>Often load balancers hiding their true identity.</p>
+<p>Contacting website owners hardly works.</p>
+</section>
+
+<section>
+<h2>It looks random, but isn't</h2>
+<p></p>
+<p>Check Point devices using LFSR - this is secure.</p>
+</section>
+
+<section>
+<h2>Duplicate nonces</h2>
+<p>We could identify two vendors</p>
+<p>Radware (Cavium chip), update from vendor</p>
+<p>Several pages from VISA Europe (vendor not yet disclosed)</p>
+</section>
+
+<section>
+<h2>Devices with random nonces</h2>
+<p>A10, IBM Lotus Domino (both published updates).</p>
+<p>Sangfor (no vendor response).</p>
+</section>
+
+<section>
+<h2>More?</h2>
+<p>There are more devices with different behaviors that we were unable to identify.</p>
+<p>Security test tools and pen testers should checks for this.</p>
+</section>
+
+<section>
+<h2>What's this? (Radware and others)</h2>
+<pre>0100000003001741
+0100000003001741
+f118cd0fa6ff5a15
+f118cd0fa6ff5a16
+f118cd0fa6ff5a74</pre>
+</section>
+
+<section>
+<h2>OpenSSL 1.0.1j</h2>
+<p>t1_enc.c:</p>
+<pre>	if (EVP_CIPHER_mode(c) == EVP_CIPH_GCM_MODE)
+		{
+		EVP_CipherInit_ex(dd,c,NULL,key,NULL,(which &amp; SSL3_CC_WRITE));
+		EVP_CIPHER_CTX_ctrl(dd, EVP_CTRL_GCM_SET_IV_FIXED, k, iv);
+		}
+</pre>
+<p>e_aes.c (EVP_CIPHER_CTX_ctrl/aes_gcm_ctrl):</p>
+<pre>		if (c->encrypt &amp;&amp;
+			RAND_bytes(gctx->iv + arg, gctx->ivlen - arg) <= 0)
+			return 0;
+</p>
+</section>
+
+
+<section>
+<h2>The Forbidden Attack</h2>
+<p>Described by Joux during NIST GCM standardization (2006).</p>
+<p>Nonce reuse allows an attacker to recover the authentication key.</p>
+<p>Attacker can modify messages with high precision.</p>
+</section>
+
+<section>
+  <h2>GCM Background</h2>
+  <p>$K$: the encryption key</p>
+  <p>$H = E_K(0)$: the authentication key derived by encrypting the all-zero block under $K$</p>
+  <p>$N$: the per-encryption nonce
+</section>
+
+<section>
+  <h2>GCM Authentication</h2>
+  <p>high level view:</p>
+  <ul>
+    <li>format the message as a polynomial</li>
+    <li>mask with $E_K(N)$</li>
+    <li>plug in $H$</li>
+  </ul>
+</section>
+
+\(
+\require{color}
+\definecolor{white}{RGB}{255,255,255}
+\definecolor{red}{RGB}{220,0,0}
+\)
+
+<section>
+  <h2>GCM Authentication</h2>
+  <p>high level <span style="color:red">attacker's</span> view:</p>
+  <ul>
+    <li>find a polynomial with $H$ a root</li>
+    <li>factor the polynomial (this is easy!)</li>
+    <li>each root is a candidate for $H$ (usually only a few!)</li>
+  </ul>
+</section>
+
+<section>
+  <h2>GCM Authentication</h2>
+  <p>For concreteness, consider a message with no AAD and one block of ciphertext.</p>
+  <p>$f(x) = C_1x^2 + Lx + \color{red}E_K(N)$</p>
+  <p>$f(H) = T$</p>
+  <ul>
+    <li>$L$: 128-bit block encoding the message length</li>
+    <li>$T$: the output authentication tag</li>
+  </ul>
+</section>
+
+<section>
+  <h2>The Attacker Knows Algebra!</h2>
+  <p>Subtract T:</p>
+  <p>$f'(x) = C_1x^2 + Lx + \color{red}E_K(N) \color{white}- T$</p>
+  <p>$f'(H) = 0$</p>
+  <p>$H$ is a root of $f'$, and we have efficient algorithms for finding roots of a polynomial!</p>
+  <p>Problem: we don't know $f'$.</p>
+</section>
+
+<section>
+  <h2>Nonce Reuse</h2>
+  <p>Suppose we have two messages encrypted under the same nonce:</p>
+  <p>$f_1'(x) = C_{1,1}x^2 + L_1x + \color{red}E_K(N) \color{white}- T_1$</p>
+  <p>$f_2'(x) = C_{2,1}x^2 + L_2x + \color{red}E_K(N) \color{white}- T_2$</p>
+  <p>$g(x) = f_1'(x) - f_2'(x)$</p>
+  <p>$g(x) = (C_{1,1}-C_{2,1})x^2 + (L_1-L_2)x - (T_1-T_2)$</p>
+</section>
+
+<section>
+  <h2>Nonce Reuse</h2>
+  <p>$g(x) = (C_{1,1}-C_{2,1})x^2 + (L_1-L_2)x - (T_1-T_2)$</p>
+  <p>$g(H) = 0$</p>
+  <p>$g$ is fully known to the attacker: we can factor it to recover $H$.</p>
+</section>
+
+<section>
+  <h2>A MitM Attack on TLS</h2>
+  <ol>
+    <li style="color:red">User visits http://attacker.com.</li>
+  </ol>
+</section>
+<section>
+  <h2>A MitM Attack on TLS</h2>
+  <ol>
+    <li style="color:#b3b3b3">User visits http://attacker.com.</li>
+    <li style="color:red">Attacker serves JavaScript to poll https://nonce-repeater.com.</li>
+  </ol>
+</section>
+<section>
+  <h2>A MitM Attack on TLS</h2>
+  <ol>
+    <li style="color:#b3b3b3">User visits http://attacker.com.</li>
+    <li style="color:#b3b3b3">Attacker serves JavaScript to poll https://nonce-repeater.com.</li>
+    <li style="color:red">Attacker collects responses indexed by nonce.</li>
+  </ol>
+</section>
+<section>
+  <h2>A MitM Attack on TLS</h2>
+  <ol>
+    <li style="color:#b3b3b3">User visits http://attacker.com.</li>
+    <li style="color:#b3b3b3">Attacker serves JavaScript to poll https://nonce-repeater.com.</li>
+    <li style="color:#b3b3b3">Attacker collects responses indexed by nonce.</li>
+    <li style="color:red">When the server repeats a nonce, attacker executes Joux's attack to recover the authentication key.</li>
+  </ol>
+</section>
+<section>
+  <h2>A MitM Attack on TLS</h2>
+  <ol>
+    <li style="color:#b3b3b3">User visits http://attacker.com.</li>
+    <li style="color:#b3b3b3">Attacker serves JavaScript to poll https://nonce-repeater.com.</li>
+    <li style="color:#b3b3b3">Attacker collects responses indexed by nonce.</li>
+    <li style="color:#b3b3b3">When the server repeats a nonce, attacker executes Joux's attack to recover the authentication key.</li>
+    <li style="color:red">Attacker redirects user to a known resource, e.g. https://nonce-repeated.com/index.html.</li>
+  </ol>
+</section>
+<section>
+  <h2>A MitM Attack on TLS</h2>
+  <ol>
+    <li style="color:#b3b3b3">User visits http://attacker.com.</li>
+    <li style="color:#b3b3b3">Attacker serves JavaScript to poll https://nonce-repeater.com.</li>
+    <li style="color:#b3b3b3">Attacker collects responses indexed by nonce.</li>
+    <li style="color:#b3b3b3">When the server repeats a nonce, attacker executes Joux's attack to recover the authentication key.</li>
+    <li style="color:#b3b3b3">Attacker redirects user to a known resource, e.g. https://nonce-repeated.com/index.html.</li>
+    <li style="color:red">Attacker replaces the ciphertext C in the server response with (C XOR index.html XOR malicious.html) and updates the tag.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>A MitM Attack on TLS</h2>
+  <img src="img/httpdiff.png">
+</section>
+
+
+<section>
+<h2>Future</h2>
+<p>Draft for Chacha20/Poly1305 and TLS 1.3 uses fully implicit nonce based on record number.</p>
+<p>Synthetic IVs and nonce misuse resistant schemes.</p>
+</section>
+
+<section>
+<h2>Conclusion</h2>
+<p>TLS 1.2 tells implementors to use a nonce, but gives no guidance how to do that properly.</p>
+<p>Some people get it wrong.</p>
+<p>We need better test tools for TLS implementation flaws (TLS-Fuzzer looks promising).</p>
+</section>
+
+<section>
+<h2>Thanks for listening</h2>
+<p><a href="https://github.com/nonce-disrespect/nonce-disrespect">https://github.com/nonce-disrespect/nonce-disrespect</a></p>
+<p>Test your hosts:</p>
+<p><a href="https://gcm.tlsfun.de/">https://gcm.tlsfun.de/</a></p>
+</section>
+
+
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+				slideNumber: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+                math: {
+                    mathjax: 'https://cdn.mathjax.org/mathjax/latest/MathJax.js',
+                    config: 'TeX-AMS_HTML-full'
+                },
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true },
+
+
+                    { src: 'plugin/math/math.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
