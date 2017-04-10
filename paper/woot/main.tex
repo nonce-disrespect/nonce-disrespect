@@ -1,0 +1,94 @@
+% >> BEGINNING OF DOCUMENT <<
+%
+% Document style configuration and additional useful packages
+%
+\documentclass[10pt, a4paper]{article}
+\usepackage[titletoc,toc]{appendix}
+%\input{git}
+\usepackage{booktabs}
+\usepackage{quattrocento}
+\usepackage{dingbat}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage[english]{babel}
+%\usepackage[english=usenglishmax]{hyphsubst}
+\usepackage{mathtools}
+\usepackage{cryptocode}
+\usepackage{minted} %% lang.-specific highlighting
+\usemintedstyle{friendly}
+\usepackage{url}
+\urlstyle{same}
+\usepackage{enumitem}
+\pagenumbering{arabic}
+\newcommand{\todo}[1]{\textcolor{red}{ToDo: #1}}
+\usepackage{tikz}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+\usepackage[capitalize]{cleveref}
+\newcommand{\textlf}[1]{#1} % dummy command to avoid LaTeX errors
+\renewcommand{\headrulewidth}{0pt}
+\usetikzlibrary{positioning,decorations.pathmorphing,calc}
+
+% --------------------------------------------------------------------------------------
+% Title, Authors, Affil, Date et cetera
+%
+\title{Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS}
+
+%% via https://tex.stackexchange.com/questions/214404/add-affiliations-to-the-authors-name-in-the-article-class
+\newcommand{\footremember}[2]{%
+    \footnote{#2}
+    \newcounter{#1}
+    \setcounter{#1}{\value{footnote}}%
+}
+\newcommand{\footrecall}[1]{%
+    \footnotemark[\value{#1}]%
+}
+
+\author{%
+Hanno Böck\footremember{hb}{\url{https://hboeck.de}, hanno@hboeck.de}
+\and Aaron Zauner\footremember{sba}{SBA Research gGmbH, azauner@sba-research.org}\footremember{lambda}{lambda: \url{resilient.systems}, azet@azet.org}
+\and Sean Devlin\footremember{sd}{Independent, seanpatrickdevlin@gmail.com}
+\and Juraj Somorovsky\footremember{hgi}{Horst Görtz Institute for IT Security, Ruhr University Bochum, juraj.somorovsky@rub.de}
+\and Philipp Jovanovic\footremember{epfl}{École Polytechnique Fédérale de Lausanne (EPFL), philipp.jovanovic@epfl.ch}
+  }
+\date{\today}
+
+% --------------------------------------------------------------------------------------
+% start of LaTeX document structure (page style, footer/header etc)
+%
+\begin{document}
+\maketitle
+\makeatletter
+
+\let\runtitle\@title
+\let\runauthor\@author
+
+\pagestyle{fancy}
+\fancyhf{}
+\chead{\runtitle}
+\rhead{\scriptsize\thepage}
+\rfoot{\tiny\textlf{\emph{\today}}\\\url{https://github.com/nonce-disrespect/nonce-disrespect/}} %XXX/TODO: change to actual website!
+%\lfoot{
+%  \scriptsize \textbf{git:} \tiny \texttt{\gitabbrhash} @ \emph{\gitauthdate}\\ %XXX/TODO: href commit to github
+%  \vspace{2}
+%  \hspace{14}\textsf{\gitauthuser \hspace{2} <\gitauthmail>}\\
+%}
+
+%% IACR copyright to CC-BY: https://eprint.iacr.org/about.html#license
+%% footnote remark regarding github availability of all source code
+{\footnotetext{The authors grant IACR a non-exclusive and irrevocable license to distribute the article under the CC BY 4.0 (creative commons attribution) license.\\
+		\newline All source-code, scripts and accompanying documentation are publicly available under CC0 1.0 license from \url{https://github.com/nonce-disrespect/nonce-disrespect/}.}}
+
+
+\input{content}
+
+\end{document}
+%EOF
