@@ -6,8 +6,8 @@ We provide supplemental material to our research on AES-GCM nonce reuse vulnerab
 Research paper
 ==============
 
-* [Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS (final version / Usenix WOOT)](https://www.usenix.org/system/files/conference/woot16/woot16-paper-bock.pdf)
-* [Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS (preprint version / eprint.iacr.org)](https://eprint.iacr.org/2016/475)
+* [Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS (camera-ready version / Usenix WOOT16)](https://www.usenix.org/system/files/conference/woot16/woot16-paper-bock.pdf)
+* [Nonce-Disrespecting Adversaries: Practical Forgery Attacks on GCM in TLS (preprint version / IACR ePrint)](https://eprint.iacr.org/2016/475)
 
 Online check
 ============
@@ -41,6 +41,8 @@ Code
 * [getnonce](getnonce/) - scan tool and OpenSSL patch used for our Internet-wide scan.
 * [gcmproxy](gcmproxy/) - attack implemented in Go.
 * [tool](tool/) - helper tools used by attack code.
+* [paper](paper/) - LaTeX source-code for IACR ePrint and WOOT16
+  camera-ready versions.
 
 License
 =======
